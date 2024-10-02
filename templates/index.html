@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="{{ url_for('static', filename='sentiment.png') }}" alt="Sentiment Image" class="header-image">
+            <h1>Sentiment Analysis Tool</h1>
+            <p>Analyze the sentiment of your text (Positive, Negative, Neutral)</p>
+        </header>
+
+        <section class="form-section">
+            <form method="POST" action="/analyze">
+                <label for="user_input">Enter a sentence:</label><br><br>
+                <textarea id="user_input" name="user_input" rows="4" cols="50" placeholder="Type your sentence here..."></textarea><br><br>
+                <input type="submit" value="Analyze Sentiment">
+            </form>
+        </section>
+
+        {% if sentiment %}
+        <section class="result-section">
+
+            <h2>Sentiment Result:</h2>
+            <p class="sentiment-result">{{ sentiment }}</p>
+        </section>
+        {% endif %}
+    </div>
+</body>
+</html>
