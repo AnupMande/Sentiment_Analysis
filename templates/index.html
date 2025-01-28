@@ -3,32 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sentiment Analysis Tool</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Sentiment Analysis</title>
 </head>
 <body>
     <div class="container">
-        <header>
-            <img src="{{ url_for('static', filename='sentiment.png') }}" alt="Sentiment Image" class="header-image">
-            <h1>Sentiment Analysis Tool</h1>
-            <p>Analyze the sentiment of your text (Positive, Negative, Neutral)</p>
-        </header>
+        <h1>Text Message Sentiment Analysis</h1>
+        <form method="POST" action="/predict">
+            <textarea name="message" rows="4" placeholder="Enter your text message here..." required></textarea>
+            <button type="submit">Analyze Sentiment</button>
+        </form>
 
-        <section class="form-section">
-            <form method="POST" action="/analyze">
-                <label for="user_input">Enter a sentence:</label><br><br>
-                <textarea id="user_input" name="user_input" rows="4" cols="50" placeholder="Type your sentence here..."></textarea><br><br>
-                <input type="submit" value="Analyze Sentiment">
-            </form>
-        </section>
-
-        {% if sentiment %}
-        <section class="result-section">
-
-            <h2>Sentiment Result:</h2>
-            <p class="sentiment-result">{{ sentiment }}</p>
-        </section>
+        {% if prediction %}
+            <div class="result">
+                <h2>Result:</h2>
+                <p>The sentiment of the message "<strong>{{ message }}</strong>" is <strong>{{ prediction }}</strong>.</p>
+            </div>
         {% endif %}
     </div>
+    <style>
+    body {
+        background-color: #6a11cb; /* Test with a solid color */
+        color: white;
+        text-align: center;
+    }
+    .container {
+        background: rgba(0, 0, 0, 0.7);
+        padding: 30px;
+        border-radius: 10px;
+        margin: auto;
+        max-width: 600px;
+    }
+    textarea {
+        width: 100%;
+        height: 150px;
+        margin: 10px 0;
+    }
+</style>
+
 </body>
 </html>

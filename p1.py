@@ -1,40 +1,32 @@
 from flask import Flask, render_template, request
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+import joblib
 
-# Initialize Flask app and VADER sentiment analyzer
 app = Flask(__name__)
-analyzer = SentimentIntensityAnalyzer()
+
+# Load your model and vectorizer at the start of your app
+model = joblib.load('/home/sunbeam/Desktop/Sentiment_analysis/Sentiment_Analysis/model/model.pkl')  # Adjust the path as necessary
+vectorizer = joblib.load('/home/sunbeam/Desktop/Sentiment_analysis/Sentiment_Analysis/model/vectorizer.pkl')  # Adjust the path as necessary
 
 
-# Home route to display the input form
 @app.route('/')
 def home():
     return render_template('index.html')
 
 
-# Route to handle sentiment analysis when form is submitted
-@app.route('/analyze', methods=['POST'])
-def analyze():
-    if request.method == 'POST':
-        # Get user input from the form
-        user_input = request.form['user_input']
+@app.route('/predict', methods=['POST'])
+def predict():
+    message = request.form['message']
 
-        # Perform sentiment analysis using VADER
-        scores = analyzer.polarity_scores(user_input)
-        compound_score = scores['compound']
+    # Transform the input message
+    message_vectorized = vectorizer.transform([message])
+    print("Vectorized message shape:", message_vectorized.shape)  # Debugging line
 
-        # Classify sentiment based on the compound score
-        if compound_score >= 0.05:
-            sentiment = 'Positive'
-        elif compound_score <= -0.05:
-            sentiment = 'Negative'
-        else:
-            sentiment = 'Neutral'
+    # Predict sentiment
+    prediction = model.predict(message_vectorized)[0]  # Get the predicted class
+    print("Prediction:", prediction)  # Debugging line
 
-        # Return the result to the webpage
-        return render_template('index.html', user_input=user_input, sentiment=sentiment)
+    return render_template('index.html', prediction=prediction, message=message)
 
 
-# Run the Flask app
 if __name__ == '__main__':
     app.run(debug=True)
